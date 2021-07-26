@@ -16,6 +16,5 @@ export interface WindowOptions {
     title?: string;
     position?: { x: number; y: number };
     openInCenter?: boolean;
-    clampWindowToViewport?: boolean;
     // @TODO (!important) always on top property
 }
