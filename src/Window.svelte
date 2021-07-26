@@ -110,7 +110,7 @@
 
 <svelte:window on:mousemove={drag} on:mouseup={stopDrag} />
 
-<!-- @TODO (!important) ability to pin window to make it always on top on demand -->
+<!-- @TODO ability to pin window to make it always on top on demand -->
 <div
     bind:this={windowDiv}
     class="window"
