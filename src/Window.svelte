@@ -118,6 +118,7 @@
     style="width: {options.width}px; height: {options.height}px; left: {options.position.x}px; top: {options.position.y}px;
         min-width: {options.minWidth}px; min-height: {options.minHeight}px; max-width: {options.maxWidth}px; max-height: {options.maxHeight}px"
     class:active={isActive}
+    class:always-on-top={options.alwaysOnTop}
     on:mousedown={activateWindow}
 >
     <div class="title-bar" on:mousedown={startDrag}>
@@ -150,6 +151,10 @@
         z-index: 2000;
         border: 1px solid rgb(0, 0, 200);
         box-shadow: 0px 0px 7px 0px rgba(0, 0, 200, 0.67);
+    }
+
+    .window.always-on-top {
+        z-index: 9999;
     }
 
     .title-bar {

@@ -16,5 +16,5 @@ export interface WindowOptions {
     title?: string;
     position?: { x: number; y: number };
     openInCenter?: boolean;
-    // @TODO (!important) always on top property
+    alwaysOnTop?: boolean;
 }
