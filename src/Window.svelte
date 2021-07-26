@@ -58,8 +58,16 @@
             return;
         }
 
-        const left = clamp(event.x - dragOffset.x, 0, window.innerWidth - options.width);
-        const top = clamp(event.y - dragOffset.y, 0, window.innerHeight - options.height);
+        // @TODO (!important) make sure that the user cannot lose the window outside the viewport when window is not clamped
+        let left = 0;
+        let top = 0;
+        if (options.clampWindowToViewport) {
+            left = clamp(event.x - dragOffset.x, 0, window.innerWidth - options.width);
+            top = clamp(event.y - dragOffset.y, 0, window.innerHeight - options.height);
+        } else {
+            left = event.x - dragOffset.x;
+            top = event.y - dragOffset.y;
+        }
 
         windowDiv.style.left = `${left}px`;
         windowDiv.style.top = `${top}px`;

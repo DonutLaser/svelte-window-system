@@ -16,6 +16,7 @@ export function openWindow(component: any, options?: WindowOptions, componentPro
         title: 'New Window',
         openInCenter: true,
         position: { x: 0, y: 0 },
+        clampWindowToViewport: false,
     };
     windowOptions = { ...windowOptions, ...options };
 
