@@ -16,6 +16,9 @@
     let dragOffset = { x: 0, y: 0 };
     let resizeObserver: ResizeObserver;
 
+    const HORIZONTAL_CLAMP = 100;
+    const HORIZONTAL_CLAMP_EXTRA = 50;
+
     // ================== SETUP ==================
     onMount(() => {
         resizeObserver = new ResizeObserver(() => {
@@ -58,7 +61,6 @@
             return;
         }
 
-        // @TODO (!important) make sure that the user cannot lose the window outside the viewport when window is not clamped
         let left = 0;
         let top = 0;
         if (options.clampWindowToViewport) {
@@ -79,6 +81,32 @@
     function stopDrag() {
         dragOffset.x = 0;
         dragOffset.y = 0;
+
+        if (!options.clampWindowToViewport) {
+            // When window is too much outside the right edge, push it back to the right to make sure it can be recovered
+            const right = options.position.x + options.width;
+            if (right < HORIZONTAL_CLAMP) {
+                const diff = HORIZONTAL_CLAMP - right;
+                options.position.x += diff + HORIZONTAL_CLAMP_EXTRA;
+            }
+
+            // When window is too much outside the left edge, push it back to the left to make sure it can be recovered
+            if (options.position.x > window.innerWidth - HORIZONTAL_CLAMP) {
+                options.position.x = window.innerWidth - HORIZONTAL_CLAMP - HORIZONTAL_CLAMP_EXTRA;
+            }
+
+            // When window is too much outside the top edge, clamp it to the top edge, otherwise the window won't be recoverable
+            // due to the fact that it can only be dragged by its title bar
+            if (options.position.y < 0) {
+                options.position.y = 0;
+            }
+
+            // When window is too much outside the bottom edge, push it back up to make sure that at least the title bar is visible
+            // to be able to recover the window when needed.
+            if (options.position.y >= window.innerHeight) {
+                options.position.y = window.innerHeight - 32;
+            }
+        }
     }
 
     function resize() {
