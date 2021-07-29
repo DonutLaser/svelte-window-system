@@ -3,7 +3,7 @@
     const dispatch = createEventDispatcher();
 
     import type { WindowOptions } from "./types";
-    import { clamp, getElementRect } from "./utils";
+    import { getElementRect } from "./utils";
 
     // ================== VARIABLES ==================
     export let component: any = null;
@@ -15,6 +15,12 @@
     let windowDiv: HTMLDivElement = null;
     let dragOffset = { x: 0, y: 0 };
     let resizeObserver: ResizeObserver;
+    let titlebarHeight = 0;
+
+    let titlebarClass = "";
+    let inactiveTitlebarClass = "";
+    let titlebarButtonClass = "";
+    let windowClass = "";
 
     const HORIZONTAL_CLAMP = 100;
     const HORIZONTAL_CLAMP_EXTRA = 50;
@@ -32,6 +38,22 @@
                 y: window.innerHeight / 2 - options.height / 2,
             };
         }
+
+        if (options.preventBodyOverflow) {
+            document.body.style.overflow = "hidden";
+        }
+
+        titlebarClass = options.customTitlebarClass || "title-bar";
+        inactiveTitlebarClass = options.customInactiveTitlebarClass || "inactive";
+        titlebarButtonClass = options.customTitlebarButtonClass || "titlebar-button";
+        windowClass = options.customWindowClass || "window";
+
+        // Using a timeout here because apparently offsetHeight is not correct onMount, so move the code to
+        // to the end fo the queue and then the offset height is correct.
+        setTimeout(() => {
+            const titlebar = windowDiv.getElementsByClassName("title-bar-default")[0] as HTMLElement;
+            titlebarHeight = titlebar.offsetHeight;
+        }, 0);
     });
 
     onDestroy(() => {
@@ -49,7 +71,7 @@
 
     function startDrag(event: MouseEvent) {
         const target = event.target as HTMLElement;
-        if (!target.classList.contains("title-bar")) {
+        if (!target.classList.contains("title-bar-default")) {
             return;
         }
 
@@ -103,7 +125,7 @@
         // When window is too much outside the bottom edge, push it back up to make sure that at least the title bar is visible
         // to be able to recover the window when needed.
         if (options.position.y >= window.innerHeight) {
-            options.position.y = window.innerHeight - 32;
+            options.position.y = window.innerHeight - titlebarHeight;
         }
 
         document.body.style.cursor = "default";
@@ -122,57 +144,65 @@
 <!-- @TODO ability to pin window to make it always on top on demand -->
 <div
     bind:this={windowDiv}
-    class="window"
+    class="window-default {windowClass}"
     class:resize={options.resizable}
     style="width: {options.width}px; height: {options.height}px; left: {options.position.x}px; top: {options.position.y}px;
         min-width: {options.minWidth}px; min-height: {options.minHeight}px; max-width: {options.maxWidth}px; max-height: {options.maxHeight}px"
-    class:active={isActive}
+    class:inactive={!isActive}
     class:always-on-top={options.alwaysOnTop}
     on:mousedown={activateWindow}
 >
-    <div class="title-bar" on:mousedown={startDrag} class:active={isActive}>
+    <div
+        class="title-bar-default {titlebarClass} {!isActive ? inactiveTitlebarClass : ''}"
+        on:mousedown={startDrag}
+        class:inactive={!isActive}
+    >
         <span class="window-title">{options.title}</span>
-        <div class="right-align">
-            <button class="close-window-button" on:click={close}>X</button>
+        <div class="title-bar-right-align">
+            {#each options.customTitlebarButtons as btn}
+                <button class="titlebar-button-default {titlebarButtonClass}" on:click={btn.callback}>{btn.value}</button>
+            {/each}
+            <button class="titlebar-button-default {titlebarButtonClass}" on:click={close}>X</button>
         </div>
     </div>
     <svelte:component this={component} {...componentProps} />
 </div>
 
 <style>
-    .window {
+    .window-default {
         position: absolute;
-
-        background-color: white;
-
+        z-index: 2000;
         box-shadow: 0px 4px 8px 1px rgba(0, 0, 0, 0.53);
+    }
 
-        border-radius: 0.2rem;
-
+    .window-default.inactive {
         z-index: 1000;
     }
 
-    .window.resize {
+    .window-default.always-on-top {
+        z-index: 10000;
+    }
+
+    .window-default.resize {
         resize: both;
         overflow: auto;
     }
 
-    .window.active {
-        z-index: 2000;
+    .window {
+        background-color: white;
+        border-radius: 0.2rem;
     }
 
-    .window.always-on-top {
-        z-index: 10000;
-    }
-
-    .title-bar {
+    .title-bar-default {
         display: flex;
         align-items: center;
         justify-content: flex-start;
+    }
 
+    .title-bar {
         height: 32px;
 
-        background-color: #727681;
+        background-color: #354981;
 
         border-top-left-radius: 0.2rem;
         border-top-right-radius: 0.2rem;
@@ -180,8 +210,8 @@
         user-select: none;
     }
 
-    .title-bar.active {
-        background-color: #354981;
+    .title-bar.inactive {
+        background-color: #727681;
     }
 
     .window-title {
@@ -192,16 +222,20 @@
         font-family: Consolas;
 
         pointer-events: none;
+        user-select: none;
     }
 
-    .title-bar .right-align {
+    .title-bar-right-align {
         height: 100%;
         margin-left: auto;
     }
 
-    .close-window-button {
+    .titlebar-button-default {
         height: 100%;
+        user-select: none;
+    }
 
+    .titlebar-button {
         background: transparent;
         outline: none;
         border: none;
@@ -216,12 +250,12 @@
         color: white;
     }
 
-    .close-window-button:hover {
+    .titlebar-button:hover {
         background-color: rgba(255, 255, 255, 0.12);
         cursor: pointer;
     }
 
-    .close-window-button:active {
+    .titlebar-button:active {
         background-color: rgba(255, 255, 255, 0.24);
     }
 </style>

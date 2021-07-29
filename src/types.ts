@@ -5,6 +5,11 @@ export interface Rect {
     height: number;
 }
 
+export interface TitlebarButton {
+    value: string;
+    callback: () => void;
+}
+
 export interface WindowOptions {
     width?: number;
     minWidth?: number;
@@ -17,4 +22,10 @@ export interface WindowOptions {
     position?: { x: number; y: number };
     openInCenter?: boolean;
     alwaysOnTop?: boolean;
+    preventBodyOverflow?: boolean;
+    customTitlebarButtons?: TitlebarButton[];
+    customTitlebarClass?: string;
+    customInactiveTitlebarClass?: string;
+    customTitlebarButtonClass?: string;
+    customWindowClass?: string;
 }
