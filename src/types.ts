@@ -23,6 +23,7 @@ export interface WindowOptions {
     openInCenter?: boolean;
     alwaysOnTop?: boolean;
     preventBodyOverflow?: boolean;
+    animate?: boolean;
     customTitlebarButtons?: TitlebarButton[];
     customTitlebarClass?: string;
     customInactiveTitlebarClass?: string;

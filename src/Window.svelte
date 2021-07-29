@@ -5,6 +5,9 @@
     import type { WindowOptions } from "./types";
     import { getElementRect } from "./utils";
 
+    import { scale } from "svelte/transition";
+    import { cubicInOut } from "svelte/easing";
+
     // ================== VARIABLES ==================
     export let component: any = null;
     export let options: WindowOptions = {};
@@ -26,6 +29,8 @@
 
     const HORIZONTAL_CLAMP = 100;
     const HORIZONTAL_CLAMP_EXTRA = 50;
+
+    $: transitionDuration = options?.animate ? 250 : 0;
 
     // ================== SETUP ==================
     onMount(() => {
@@ -166,6 +171,11 @@
     class:inactive={!isActive}
     class:always-on-top={options.alwaysOnTop}
     on:mousedown={activateWindow}
+    transition:scale={{
+        duration: transitionDuration,
+        opacity: 0,
+        easing: cubicInOut,
+    }}
 >
     <div
         class="title-bar-default {titlebarClass} {!isActive ? inactiveTitlebarClass : ''}"

@@ -1,3 +1,4 @@
+import { check_outros, group_outros, transition_out } from "svelte/internal";
 import type { WindowOptions } from "./types";
 
 import Window from './Window.svelte';
@@ -5,6 +6,18 @@ import Window from './Window.svelte';
 let nextId = 0;
 let openWindows: { [id: number]: Window } = {};
 let activeWindow = -1;
+
+function outroAndDestroy(instance: Window) {
+    if (instance.$$.fragment && instance.$$.fragment.o) {
+        group_outros();
+        transition_out(instance.$$.fragment, 0, 0, () => {
+            instance.$destroy();
+        });
+        check_outros();
+    } else {
+        instance.$destroy();
+    }
+}
 
 export function openWindow(component: any, options?: WindowOptions, componentProps?: any) {
     // @TODO (!important) optional animations
@@ -19,6 +32,7 @@ export function openWindow(component: any, options?: WindowOptions, componentPro
         title: 'New Window',
         openInCenter: true,
         position: { x: 0, y: 0 },
+        animate: true,
     };
     windowOptions = { ...windowOptions, ...options };
 
@@ -54,7 +68,7 @@ export function closeWindow(windowId: number) {
         return;
     }
 
-    window.$destroy();
+    outroAndDestroy(window);
     delete openWindows[windowId];
 
     const wnds = Object.keys(openWindows);
