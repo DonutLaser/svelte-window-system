@@ -5,6 +5,16 @@
   "main": "dist/index.umd.js",
   "types": "dist/ts/index.d.ts",
   "version": "0.1.0",
+  "author": "Vidmantas Luneckas",
+  "license": "MIT",
+  "homepage": "https://github.com/DonutLaser/svelte-window-system",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DoutLaser/svelte-window-system.git"
+  },
+  "bugs": {
+    "url": "https://github.com/DonutLaser/svelte-window-system/issues"
+  },
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c -w",
@@ -33,6 +43,9 @@
     "typescript": "^4.0.3"
   },
   "keywords": [
-    "svelte"
+    "svelte",
+    "window",
+    "system",
+    "typescript"
   ]
 }
