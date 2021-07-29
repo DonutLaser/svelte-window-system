@@ -4,7 +4,7 @@
   <a href="https://github.com/DonutLaser/svelte-window-system#readme" target="_blank">
     <img alt="Documentation" src="https://img.shields.io/badge/documentation-yes-brightgreen.svg" />
   </a>
-  <a href="https://github.com/DonutLaser/svelte-modal-system/graphs/commit-activity" target="_blank">
+  <a href="https://github.com/DonutLaser/svelte-window-system/graphs/commit-activity" target="_blank">
     <img alt="Maintenance" src="https://img.shields.io/badge/Maintained%3F-yes-green.svg" />
   </a>
 </p>
@@ -34,11 +34,11 @@ npm install svelte-window-system
     import MyWindowComponent from 'MyWindowComponent.svelte';
 
     function openNewWindow() {
-        openModal(MyWindowComponent, { width: 200, height: 400 }, { someProp: 'my window property' });
+        openWindow(MyWindowComponent, { width: 200, height: 400 }, { someProp: 'my window property' });
     }
 </script>
 
-<button on:click="{openNewModal}">Open modal</button>
+<button on:click="{openNewWindow}">Open window</button>
 ```
 ```svelte
 <!-- MyWindowComponent.svelte -->
@@ -74,7 +74,7 @@ All of these are optional.
 | **customTitlebarClass**         | string                   | <empty>        | A class that will style the title bar. **Must be defined in global.css**. Overrides the default styles completely.                                                                     |
 | **customInactiveTitlebarClass** | string                   | <empty>        | A class that will style the title bar when the window is not active. **Must be defined in global.css**. Overrides the default styles completely.                                       |
 | **customTitlebarButtonClass**   | string                   | <empty>        | A class that will style the title bar buttons. **Must be defined in global.css**. Overrides the default styles completely.                                                             |
-| **customWindowClass**           | string                   | <empty>        | A class that will style the main modal window. **Must be defined in global.css**. Overrides the default styles completely.                                                             |
+| **customWindowClass**           | string                   | <empty>        | A class that will style the window. **Must be defined in global.css**. Overrides the default styles completely.                                                             |
 
 ### Component props
 You can easily provide the properties for your window component by passing in an object to `openWindow` function.
@@ -93,10 +93,10 @@ openWindow(component, windowOptions, componentProps);
 The system allows you to add custom button to the title bar next to the close button. This can be achieved by providing one or more TitlebarButton objects with windowOptions in a property `customTitlebarButtons` when opening a window. The style of the button will be the same as the style of close button and if a `customTitlebarButtonsClass` is specified, the buttons will instead be styled according to the probided class.
 
 #### TitlebarButton
-| Option   | Type                         | Description                         |
-|----------|------------------------------|-------------------------------------|
-| value    | string                       | Text inside a button                |
-| callback | a function with no arguments | A callback function for the button  |
+| Option       | Type                         | Description                         |
+|--------------|------------------------------|-------------------------------------|
+| **value**    | string                       | Text inside a button                |
+| **callback** | a function with no arguments | A callback function for the button  |
 
 ## Author
 
@@ -106,7 +106,7 @@ The system allows you to add custom button to the title bar next to the close bu
 
 ## 🤝 Contributing
 
-Contributions, issues and feature requests are welcome!<br />Feel free to check [issues page](https://github.com/DonutLaser/svelte-modal-system/issues). You can also take a look at the [contributing guide](https://github.com/DonutLaser/svelte-modal-system/blob/master/CONTRIBUTING.md).
+Contributions, issues and feature requests are welcome!<br />Feel free to check [issues page](https://github.com/DonutLaser/svelte-window-system/issues). You can also take a look at the [contributing guide](https://github.com/DonutLaser/svelte-window-system/blob/master/CONTRIBUTING.md).
 
 ## Show your support
 
@@ -115,7 +115,7 @@ Give a ⭐️ if this project helped you!
 ## 📝 License
 
 Copyright © 2021 [Vidmantas Luneckas](https://github.com/DonutLaser).<br />
-This project is [MIT](https://github.com/DonutLaser/svelte-modal-system/blob/master/LICENSE) licensed.
+This project is [MIT](https://github.com/DonutLaser/svelte-window-system/blob/master/LICENSE) licensed.
 
 ***
 _This README was generated with ❤️ by [readme-md-generator](https://github.com/kefranabg/readme-md-generator)_

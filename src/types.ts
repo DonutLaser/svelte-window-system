@@ -6,6 +6,7 @@ export interface Rect {
 }
 
 export interface TitlebarButton {
+    // @TODO (!important) allow to have an icon instead of text in the button
     value: string;
     callback: () => void;
 }
