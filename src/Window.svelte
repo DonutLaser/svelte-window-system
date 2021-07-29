@@ -16,6 +16,8 @@
     let dragOffset = { x: 0, y: 0 };
     let resizeObserver: ResizeObserver;
     let titlebarHeight = 0;
+    let originalMaxHeight = 0;
+    let originalMaxWidth = 0;
 
     let titlebarClass = "";
     let inactiveTitlebarClass = "";
@@ -42,6 +44,9 @@
         if (options.preventBodyOverflow) {
             document.body.style.overflow = "hidden";
         }
+
+        originalMaxHeight = options.maxHeight;
+        originalMaxWidth = options.maxWidth;
 
         titlebarClass = options.customTitlebarClass || "title-bar";
         inactiveTitlebarClass = options.customInactiveTitlebarClass || "inactive";
@@ -134,8 +139,18 @@
     function resize() {
         options.width = windowDiv.offsetWidth;
         options.height = windowDiv.offsetHeight;
-        options.maxHeight = window.innerHeight - options.position.y;
-        options.maxWidth = window.innerWidth - options.position.x;
+
+        if (originalMaxHeight >= 0) {
+            options.maxHeight = Math.min(window.innerHeight - options.position.y, originalMaxHeight);
+        } else {
+            options.maxHeight = window.innerHeight - options.position.y;
+        }
+
+        if (originalMaxWidth >= 0) {
+            options.maxWidth = Math.min(window.innerWidth - options.position.x, originalMaxWidth);
+        } else {
+            options.maxWidth = window.innerWidth - options.position.x;
+        }
     }
 </script>
 
@@ -159,9 +174,11 @@
     >
         <span class="window-title">{options.title}</span>
         <div class="title-bar-right-align">
-            {#each options.customTitlebarButtons as btn}
-                <button class="titlebar-button-default {titlebarButtonClass}" on:click={btn.callback}>{btn.value}</button>
-            {/each}
+            {#if options.customTitlebarButtons}
+                {#each options.customTitlebarButtons as btn}
+                    <button class="titlebar-button-default {titlebarButtonClass}" on:click={btn.callback}>{btn.value}</button>
+                {/each}
+            {/if}
             <button class="titlebar-button-default {titlebarButtonClass}" on:click={close}>X</button>
         </div>
     </div>

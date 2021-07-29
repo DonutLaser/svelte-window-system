@@ -7,11 +7,14 @@ let openWindows: { [id: number]: Window } = {};
 let activeWindow = -1;
 
 export function openWindow(component: any, options?: WindowOptions, componentProps?: any) {
+    // @TODO (!important) optional animations
     let windowOptions: WindowOptions = {
         width: 600,
         minWidth: 300,
+        maxWidth: -1,
         height: 500,
         minHeight: 200,
+        maxHeight: -1,
         resizable: true,
         title: 'New Window',
         openInCenter: true,
